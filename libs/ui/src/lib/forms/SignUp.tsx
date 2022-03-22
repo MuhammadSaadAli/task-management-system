@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, MouseEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import {
   FormControl,
   InputLabel,
@@ -9,7 +9,7 @@ import {
 import IconButton from '@mui/material/IconButton';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-// import swal from 'sweetalert';
+import swal from 'sweetalert';
 import './forms.css';
 
 type tValue = {
@@ -22,7 +22,7 @@ export default function SignUp() {
     username: 'saad',
     password: 'Secret@1',
   });
-  const url = 'http://localhost:3333/api/auth/signup';
+  const [url] = useState('http://localhost:3333/api/auth/signup');
 
   const getData = async () => {
     const rawResponse = await fetch(url, {
@@ -35,29 +35,17 @@ export default function SignUp() {
     });
 
     const content = await rawResponse.json();
-
-    // setToken(data);
-    if (content.statusCode !== 201) {
-      console.log('data : ', content.message);
+    if (content.id) {
+      console.log('data : ', content.id);
+      swal(
+        'You have sucessfully created the Account!',
+        'Please Sign In to confirm yourself',
+        'success'
+      );
     } else {
-      console.log('data success : ', content.statusCode);
+      console.log(content.message);
+      swal(` Error ${content.statusCode} ${content.message}`, '', 'error');
     }
-
-    // .then((response) => {
-    //   console.log('response.json() ', response.json());
-    //   return response.json();
-    // })
-    // .then((data) => {
-    //   setStatusCode(data.statusCode);
-    //   if (statusCode !== 201) {
-    //     console.log('Data Message ', data.message);
-    //   } else {
-    //     console.log(data);
-    //   }
-    // })
-    // .catch((error) => console.log(error));
-    // setToken(rawResponse);
-    // console.log('response', rawResponse);
   };
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -104,6 +92,7 @@ export default function SignUp() {
             }
           />
         </FormControl>
+
         <Button onClick={getData} className="formControl" variant="contained">
           {' '}
           Sign Up{' '}
