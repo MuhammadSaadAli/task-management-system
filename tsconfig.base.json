@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@wiztech/backend-lib": ["libs/backend-lib/src/index.ts"],
+      "@wiztech/rest-api-lib": ["libs/rest-api-lib/src/index.ts"],
+      "@wiztech/ui": ["libs/ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

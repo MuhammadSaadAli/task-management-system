@@ -1,0 +1,22 @@
+{
+  "root": "libs/rest-api-lib",
+  "sourceRoot": "libs/rest-api-lib/src",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/rest-api-lib/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/rest-api-lib"],
+      "options": {
+        "jestConfig": "libs/rest-api-lib/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

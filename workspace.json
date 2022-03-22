@@ -2,6 +2,9 @@
   "version": 2,
   "projects": {
     "my-app": "apps/my-app",
-    "my-app-e2e": "apps/my-app-e2e"
+    "my-app-e2e": "apps/my-app-e2e",
+    "rest-api": "apps/rest-api",
+    "rest-api-lib": "libs/rest-api-lib",
+    "ui": "libs/ui"
   }
 }

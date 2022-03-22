@@ -1,13 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-import NxWelcome from './nx-welcome';
-
-export function App() {
+import { RouterApp } from '@wiztech/ui';
+import './app.scss';
+function App() {
   return (
-    <>
-      <NxWelcome title="my-app" />
-      <div />
-    </>
+    <div className="app">
+      <RouterApp />
+    </div>
   );
 }
 
