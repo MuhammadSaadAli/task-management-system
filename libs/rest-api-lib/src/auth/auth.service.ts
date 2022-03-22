@@ -27,7 +27,9 @@ export class AuthService {
       throw new UnauthorizedException('please check the username or password');
     }
   }
-  async signup(authCredentialDto: AuthCredentialDto): Promise<void | string> {
+  async signup(
+    authCredentialDto: AuthCredentialDto
+  ): Promise<void | { id: string }> {
     return this.userRepository.createUser(authCredentialDto);
   }
 }

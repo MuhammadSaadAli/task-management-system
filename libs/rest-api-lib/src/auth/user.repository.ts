@@ -11,7 +11,7 @@ import { User } from './user.entity';
 export class UserRepository extends Repository<User> {
   async createUser(
     authCredentialDto: AuthCredentialDto
-  ): Promise<void | string> {
+  ): Promise<void | { id: string }> {
     const { username, password } = authCredentialDto;
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
@@ -19,9 +19,8 @@ export class UserRepository extends Repository<User> {
 
     try {
       await this.save(user);
-      return user.id;
+      return { id: user.id };
     } catch (error) {
-      console.log(error.code);
       if (error.code === '23505') {
         throw new ConflictException('User already exist');
       } else {
