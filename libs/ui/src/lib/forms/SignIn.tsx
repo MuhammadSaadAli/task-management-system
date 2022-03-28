@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import './forms.css';
+import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 
 type tValue = {
   username: string;
@@ -21,8 +23,8 @@ export default function SignIn() {
     username: 'saad',
     password: 'Secret@1',
   });
-  const [token, setToken] = useState({});
   const url = 'http://localhost:3333/api/auth/signin';
+  const navigate = useNavigate();
 
   const getData = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -36,9 +38,14 @@ export default function SignIn() {
       body: JSON.stringify(values),
     });
     const content = await rawResponse.json();
-    setToken(content);
+    if (content.accessToken) {
+      console.log(content.accessToken);
+      localStorage.setItem('credentials', JSON.stringify(content.accessToken));
+      setTimeout(() => navigate('/home'), 500);
+    } else {
+      swal(` Error ${content.statusCode} ${content.message}`, '', 'error');
+    }
   };
-  console.log('token', token);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleChange =
     (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
