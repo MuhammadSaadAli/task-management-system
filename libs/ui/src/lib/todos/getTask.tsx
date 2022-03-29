@@ -2,28 +2,42 @@ import { useState, useEffect } from 'react';
 import { Paper, Button } from '@material-ui/core';
 import style from './todos.module.scss';
 import TopBar from './topBar';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import {
+  Dialog,
+  FormControl,
+  Box,
+  MenuItem,
+  InputLabel,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  OutlinedInput,
+} from '@mui/material';
 
 type ICProps = {
   status: string;
   id: string;
+  updateTheStatus: (statusValue: string, id: string) => void;
 };
 
 function CustomSelect(props: ICProps) {
-  const { status, id } = props;
-  const [value, setValue] = useState(status);
+  const { status, id, updateTheStatus } = props;
+  const [statusValue, setStatusValue] = useState(status);
+  const [open, setOpen] = useState(false);
+
   const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value);
+    setStatusValue(event.target.value);
   };
-  useEffect(() => {
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleUpdateStatus = async () => {
     const token = localStorage.getItem('credentials');
     const user = JSON.parse(token ? token : '');
-    console.log('user : ', user);
     const fetchObj = {
       url: `http://localhost:3333/api/task/${id}/status`,
       order: {
@@ -31,51 +45,56 @@ function CustomSelect(props: ICProps) {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
           Authorization: `Bearer ${user}`,
         },
-        body: JSON.stringify(value),
+        body: JSON.stringify({ status: statusValue }),
       },
     };
-    const updateStatus = async () => {
-      const rawResponse = await fetch(fetchObj.url, fetchObj.order);
-      const content = await rawResponse.json();
-      console.log(content);
-    };
-    updateStatus();
-  }, [value]);
+
+    const rawResponse = await fetch(fetchObj.url, fetchObj.order).then(
+      async () => await updateTheStatus(statusValue, id)
+    );
+
+    setOpen(false);
+  };
+
   return (
-    <Box sx={{ minWidth: 120 }}>
-      Status
-      <FormControl fullWidth>
-        <InputLabel variant="standard" htmlFor="uncontrolled-native">
-          {' '}
-          {value === '' ? status : ''}{' '}
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-autowidth-label"
-          id="demo-simple-select-autowidth"
-          value={value}
-          onChange={handleChange}
-          autoWidth
-          placeholder={status}
-        >
-          <MenuItem value="OPEN">OPEN</MenuItem>
-          <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
-          <MenuItem value="DONE">DONE</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <div>
+      <Button onClick={handleClickOpen}>
+        <EditIcon color="primary" />
+      </Button>
+      <Dialog disableEscapeKeyDown open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>You can update the status from here </DialogTitle>
+        <DialogContent>
+          <Box component="form">
+            <FormControl sx={{ m: 2, width: '80%' }}>
+              <InputLabel id="demo-dialog-select-label">Status</InputLabel>
+              <Select
+                labelId="demo-dialog-select-label"
+                id="demo-dialog-select"
+                value={statusValue}
+                onChange={handleChange}
+                input={<OutlinedInput label="Status" />}
+              >
+                <MenuItem value="OPEN"> OPEN </MenuItem>
+                <MenuItem value="IN_PROGRESS"> IN_PROGRESS </MenuItem>
+                <MenuItem value="DONE"> DONE </MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={handleUpdateStatus}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
 export default function GetTask() {
-  const [tasks, setTasks] = useState([
-    {
-      id: '',
-      title: '',
-      description: '',
-      status: '',
-    },
-  ]);
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [status, setStatus] = useState<boolean>(true);
 
   const token = localStorage.getItem('credentials');
   const user = JSON.parse(token ? token : '');
@@ -95,11 +114,11 @@ export default function GetTask() {
     const fetchApi = async () => {
       const rawResponse = await fetch(fetchObj.url, fetchObj.order);
       const response = await rawResponse.json();
-      console.log(response);
       setTasks(response);
     };
+    console.log(status);
     fetchApi();
-  }, []);
+  }, [status]);
 
   const deletePost = async (id: string) => {
     const fetchObj = {
@@ -113,32 +132,61 @@ export default function GetTask() {
         },
       },
     };
-    await fetch(fetchObj.url, fetchObj.order);
+    await fetch(fetchObj.url, fetchObj.order).then(() => {
+      setTasks((old) => {
+        old = old.filter((x) => x.id !== id);
+        return old;
+      });
+    });
   };
 
+  const updateTheStatus = (statusValue: string, id: string): void => {
+    const findTask = tasks.find((task) => task.id === id);
+    const val = (findTask.status = statusValue);
+    console.log('val ', val);
+    console.log('find Task ', findTask);
+    setTasks([...tasks, val]);
+    setStatus(!status);
+    console.log(tasks);
+  };
   return (
     <>
       <TopBar />
 
       <div className={style['getTask']}>
-        {tasks.map((task) => {
-          return (
-            <Paper className={style['paper']} key={task.id}>
-              <h1> {task.title} </h1>
-              <p> {task.description} </p>
-              <div className={style['select']}>
-                {' '}
-                <div>
-                  <CustomSelect id={task.id} status={task.status} />{' '}
-                </div>
-                <Button onClick={() => deletePost(task.id)}>
+        {tasks.length ? (
+          tasks.map((task) => {
+            return (
+              <Paper className={style['paper']} key={task.id}>
+                <h1> {task.title} </h1>
+                <p> {task.description} </p>
+                <div className={style['select']}>
                   {' '}
-                  <DeleteOutlineIcon color="error" />{' '}
-                </Button>
-              </div>
-            </Paper>
-          );
-        })}
+                  <div>Status: {task.status} </div>
+                  <div className={style['status-icon']}>
+                    <div>
+                      <CustomSelect
+                        updateTheStatus={(statusValue, id) =>
+                          updateTheStatus(statusValue, id)
+                        }
+                        id={task.id}
+                        status={task.status}
+                      />{' '}
+                    </div>
+                    <div>
+                      <Button onClick={() => deletePost(task.id)}>
+                        {' '}
+                        <DeleteOutlineIcon color="error" />{' '}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Paper>
+            );
+          })
+        ) : (
+          <h3>Loading..........</h3>
+        )}
       </div>
     </>
   );

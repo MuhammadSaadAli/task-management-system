@@ -16,7 +16,6 @@ export default function AddTask() {
   const handleChange =
     (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
       setTask({ ...task, [prop]: event.target.value });
-      console.log(task);
     };
   // oldArray => [ ...oldArray , todo]
   const addTask = async (): Promise<void> => {

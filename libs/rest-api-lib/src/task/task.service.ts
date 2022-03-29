@@ -40,7 +40,6 @@ export class TaskService {
     if (result.affected === 0) {
       throw new NotFoundException(`Task ID: ${id} not found `);
     }
-    console.log(result);
   }
 
   async updateTask(id: string, status: TaskStatus, user: User): Promise<Task> {
