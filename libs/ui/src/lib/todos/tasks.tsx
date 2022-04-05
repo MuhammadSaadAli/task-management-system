@@ -1,11 +1,11 @@
-import AddTask from './addTask';
+import GetTask from './getTask';
 import TopBar from './topBar';
 
 function Task() {
   return (
     <>
       <TopBar />
-      <AddTask />
+      <GetTask />
     </>
   );
 }

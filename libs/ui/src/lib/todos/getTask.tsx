@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Paper, Button } from '@material-ui/core';
 import style from './todos.module.scss';
-import TopBar from './topBar';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,7 +15,7 @@ import {
   DialogTitle,
   OutlinedInput,
 } from '@mui/material';
-
+import AddTask from './addTask';
 type ICProps = {
   status: string;
   id: string;
@@ -67,15 +66,15 @@ function CustomSelect(props: ICProps) {
       <Dialog disableEscapeKeyDown open={open} onClose={() => setOpen(false)}>
         <DialogTitle>You can update the status from here </DialogTitle>
         <DialogContent>
-          <Box component="form">
-            <FormControl sx={{ m: 2, width: '80%' }}>
+          <Box component="form" style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <FormControl sx={{ m: 2, minWidth: '80%' }}>
               <InputLabel id="demo-dialog-select-label">Status</InputLabel>
               <Select
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
                 value={statusValue}
                 onChange={handleChange}
-                input={<OutlinedInput label="Status" />}
+                input={<OutlinedInput label="Status" id="demo-dialog-native" />}
               >
                 <MenuItem value="OPEN"> OPEN </MenuItem>
                 <MenuItem value="IN_PROGRESS"> IN_PROGRESS </MenuItem>
@@ -151,42 +150,56 @@ export default function GetTask() {
   };
   return (
     <>
-      <TopBar />
-
-      <div className={style['getTask']}>
-        {tasks.length ? (
-          tasks.map((task) => {
-            return (
-              <Paper className={style['paper']} key={task.id}>
-                <h1> {task.title} </h1>
-                <p> {task.description} </p>
-                <div className={style['select']}>
-                  {' '}
-                  <div>Status: {task.status} </div>
-                  <div className={style['status-icon']}>
-                    <div>
-                      <CustomSelect
-                        updateTheStatus={(statusValue, id) =>
-                          updateTheStatus(statusValue, id)
-                        }
-                        id={task.id}
-                        status={task.status}
-                      />{' '}
-                    </div>
-                    <div>
-                      <Button onClick={() => deletePost(task.id)}>
-                        {' '}
-                        <DeleteOutlineIcon color="error" />{' '}
-                      </Button>
+      <AddTask toggleStatus={() => setStatus(!status)} />
+      <div className={style['allTasks']}>
+        <div className={style['getTask']}>
+          {tasks.length ? (
+            tasks.map((task) => {
+              return (
+                <Paper
+                  className={style['paper']}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    backgroundColor: 'rgb(174 217 253)',
+                  }}
+                  key={task.id}
+                >
+                  <div>
+                    <h1> {task.title} </h1>
+                    <p> {task.description} </p>
+                  </div>
+                  <div>
+                    <div className={style['select']}>
+                      {' '}
+                      <div>Status: {task.status} </div>
+                      <div className={style['status-icon']}>
+                        <div>
+                          <CustomSelect
+                            updateTheStatus={(statusValue, id) =>
+                              updateTheStatus(statusValue, id)
+                            }
+                            id={task.id}
+                            status={task.status}
+                          />{' '}
+                        </div>
+                        <div>
+                          <Button onClick={() => deletePost(task.id)}>
+                            {' '}
+                            <DeleteOutlineIcon color="error" />{' '}
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Paper>
-            );
-          })
-        ) : (
-          <h3>Loading..........</h3>
-        )}
+                </Paper>
+              );
+            })
+          ) : (
+            <h1>We do not have any task right now.</h1>
+          )}
+        </div>
       </div>
     </>
   );

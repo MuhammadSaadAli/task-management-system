@@ -1,14 +1,18 @@
 .container {
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: Noto Sans, sans-serif;
+  font-family: 'Noto Sans', sans-serif;
+}
+.top-bar-heading {
+  font-size: 2rem;
+  flex-grow: 1;
 }
 .box {
-  background-color: rgb(148, 165, 165);
+  background-color: rgb(65, 238, 238);
   width: 25vw;
   justify-content: center;
   display: flex;
@@ -34,6 +38,11 @@
   padding: 5vh;
   margin: 1vh;
 }
+.addTask {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
 
 .getTask {
   display: flex;
@@ -41,7 +50,30 @@
   flex-wrap: wrap;
   min-height: 100vh;
 }
-
+.box-for-addTask {
+  width: 35vw;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 25vh;
+  div {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    justify-content: space-evenly;
+    align-items: baseline;
+    * {
+      width: 100%;
+      padding: 0.5vh;
+    }
+  }
+}
+.allTasks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 @media only screen and (max-width: 1145px) {
   .paper {
     height: 40vh;
@@ -57,10 +89,28 @@
 }
 .status-icon {
   display: flex;
+  margin-bottom: 0px;
 }
-@media only screen and (max-width: 665px) {
+@media only screen and (max-width: 769px) {
+  .addTask {
+    margin-top: 2rem !important;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    height: 100%;
+  }
+  .addTaskButton {
+    width: 95vw;
+  }
   .paper {
     height: 35vh;
-    width: 55vw;
+    width: 80vw;
+  }
+  .getTask {
+    justify-content: center;
+  }
+  .box-for-addTask {
+    min-width: 80vw;
+    min-height: 40vh;
   }
 }

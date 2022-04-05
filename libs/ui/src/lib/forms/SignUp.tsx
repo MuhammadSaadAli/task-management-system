@@ -22,33 +22,44 @@ export default function SignUp() {
     username: 'saad',
     password: 'Secret@1',
   });
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [url] = useState('http://localhost:3333/api/auth/signup');
 
   const getData = async () => {
-    const rawResponse = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(values),
-    });
+    if (values.password === confirmPassword) {
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-    const content = await rawResponse.json();
-    if (content.id) {
-      console.log('data : ', content.id);
-      swal(
-        'You have sucessfully created the Account!',
-        'Please Sign In to confirm yourself',
-        'success'
-      );
+      const content = await rawResponse.json();
+      if (content.id) {
+        console.log('data : ', content.id);
+        swal(
+          'You have sucessfully created the Account!',
+          'Please Sign In to confirm yourself',
+          'success'
+        );
+      } else {
+        console.log(content.message);
+        swal(` Error ${content.statusCode} ${content.message}`, '', 'error');
+      }
     } else {
-      console.log(content.message);
-      swal(` Error ${content.statusCode} ${content.message}`, '', 'error');
+      swal(
+        'Error! Please check your password',
+        'Password does not match',
+        'error'
+      );
     }
   };
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setConfirmShowPassword] =
+    useState<boolean>(false);
   const handleChange =
     (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
@@ -87,6 +98,28 @@ export default function SignUp() {
                   onClick={handleClickShowPassword}
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+
+        <FormControl variant="standard" className="formControl">
+          <InputLabel htmlFor="standard-adornment-password">
+            Confirm Password
+          </InputLabel>
+          <Input
+            id="standard-adornment-password"
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setConfirmShowPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }

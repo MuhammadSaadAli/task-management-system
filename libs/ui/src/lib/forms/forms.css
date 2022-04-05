@@ -31,3 +31,33 @@ form .formControl {
   width: 20vw;
   margin-top: 2vh;
 }
+.topBarText {
+  display: flex;
+  flex-grow: 1;
+  font-size: 2rem;
+  justify-content: center;
+}
+@media only screen and (max-width: 769px) {
+  .container {
+    width: 80vw;
+    height: 70vh;
+  }
+  form .formControl {
+    width: 60vw;
+    margin-top: 3vh;
+  }
+}
+
+@media only screen and (max-width: 427px) {
+  .container {
+    width: 90vw;
+    height: 80vh;
+  }
+  form .formControl {
+    width: 80vw;
+    margin-top: 3vh;
+  }
+  .topBarText {
+    font-size: 1.5rem;
+  }
+}
