@@ -74,9 +74,22 @@
   justify-content: center;
   align-items: center;
 }
+.taskDetails {
+  position: relative;
+  min-height: 100vh;
+  margin: 8rem 6rem;
+  div {
+    h1 {
+      font-size: 4rem;
+    }
+    p {
+      font-size: 2rem;
+    }
+  }
+}
 @media only screen and (max-width: 1145px) {
   .paper {
-    height: 40vh;
+    height: 33vh;
     width: 30vw;
   }
 }
@@ -103,14 +116,15 @@
     width: 95vw;
   }
   .paper {
-    height: 35vh;
     width: 80vw;
   }
   .getTask {
     justify-content: center;
   }
   .box-for-addTask {
-    min-width: 80vw;
-    min-height: 40vh;
+    min-width: 70vw;
+  }
+  .taskDetails {
+    margin: 5rem 2rem;
   }
 }

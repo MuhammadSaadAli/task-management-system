@@ -4,6 +4,7 @@ import style from './todos.module.scss';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import { Link } from 'react-router-dom';
 import {
   Dialog,
   FormControl,
@@ -167,8 +168,17 @@ export default function GetTask() {
                   key={task.id}
                 >
                   <div>
-                    <h1> {task.title} </h1>
-                    <p> {task.description} </p>
+                    <Link
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                      to={`/home/${task.id}`}
+                    >
+                      <h1> {task.title} </h1>
+                      {task?.description?.length >= 250 ? (
+                        <p> {task.description.substr(0, 250)}....... </p>
+                      ) : (
+                        <p> {task.description} </p>
+                      )}
+                    </Link>
                   </div>
                   <div>
                     <div className={style['select']}>
